@@ -10,7 +10,7 @@ const longBreakInSecods = 20 * 60;
  * DOM NODES
 *****/
 
-// const timerNode = document.querySelector("#timer");
+const timerNode = document.querySelector("#timer");
 const minutesNode = document.querySelector(".minutes");
 const secondsNode = document.querySelector(".seconds");
 const btnStart = document.querySelector("#btn-start");
@@ -31,9 +31,9 @@ let cycleNumber = 1;
  * FUNCTION DECLARATION
 *****/
 
-const startTimer = (ts) => {
+const startTimer = (newTimestamp) => {
   currentCountdown = mainTimerInSeconds;
-  currentTimeStamp = ts;
+  currentTimeStamp = newTimestamp;
 
   RAF = requestAnimationFrame(runTimer);
 }
