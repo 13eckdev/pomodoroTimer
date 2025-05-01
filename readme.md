@@ -16,8 +16,8 @@
 
 ## UI Goals
 - [X] Big timer, not much else
-- [ ] Pause button
-- [ ] Visual countdown
+- [X] Pause button
+- [X] Visual countdown
 - [ ] Variable time options
   - Choose how long the work timer
   - Choose how long the break timers
