@@ -4,7 +4,16 @@
 
 const mainTimerInSeconds = 25 * 60;
 const restTimerInSeconds = 5 * 60;
-const longBreakInSecods = 20 * 60;
+const longBreakInSeconds = 10 * 60;
+
+const CycleType = Object.freeze({
+  NONE: 0,
+  MAIN_TIMER: 1, // WORK 🖥️ : ${cycleNumber+1}
+  REST_TIMER: 2, // COFFEE ☕️ : ${cycleNumber+1}
+  BREAK_TIMER: 3 // HOME 😴 : ${cycleNumber+1}
+});
+
+
 
 /*****
  * DOM NODES
@@ -22,33 +31,54 @@ const btnStop = document.querySelector("#btn-stop");
 *****/
 
 let currentCountdown = 0;
+let currentCountdownTruncated = 0;
 let currentTimeStamp = 0;
 let RAF;
-let cycleNumber = 1;
-
+let currentCycle = CycleType.NONE;
+let cycleNumber = 0;
+let paused = false;
+let started = false;
 
 /*****
  * FUNCTION DECLARATION
 *****/
 
+
 const startTimer = (newTimestamp) => {
+  started = true;
   currentCountdown = mainTimerInSeconds;
+  currentCountdownTruncated = mainTimerInSeconds;
   currentTimeStamp = newTimestamp;
+  btnStart.innerText = "Pause";
+  currentCycle = CycleType.MAIN_TIMER;
 
   RAF = requestAnimationFrame(runTimer);
+}
+
+const toggleStartButton = () => {
+  btnStart.innerText = paused ? "Pause" : "Continue";
+  paused = !paused;
 }
 
 const runTimer = (newTimestamp) => {
   // newTimestamp - currentTimestamp = delta time (in MS)
   const deltaTimeMS = newTimestamp - currentTimeStamp;
   currentTimeStamp = newTimestamp;
+
+  RAF = requestAnimationFrame(runTimer);
+  
+  if (paused) { return; }
   
   // MS * 0.001 = seconds
   const deltaTimeS = deltaTimeMS * 0.001;
   
   // currentCountdown - DT(s) = time left
   currentCountdown -= deltaTimeS;
-  
+  const newTruncated = Math.floor(currentCountdown);
+  checkCycle(currentCountdown);
+
+  if (newTruncated === currentCountdownTruncated) { return; }
+
   // FLOOR (timeleft / 60) = min remaining
   const minRemaining = Math.floor(currentCountdown / 60).toString().padStart(2, "0");
   
@@ -58,18 +88,52 @@ const runTimer = (newTimestamp) => {
   // update the DOM
   minutesNode.innerText = minRemaining;
   secondsNode.innerText = secRemaining;
-
-  RAF = requestAnimationFrame(runTimer);
+  currentCountdownTruncated = newTruncated;
 }
 
+const checkCycle = (countdown) => {
+  // dt <= 0 ? move on to rest/restart main
+  if (countdown > 0) { return; }
+  
+  if (currentCycle === CycleType.MAIN_TIMER) {
+    currentCycle = CycleType.REST_TIMER;
+    currentCountdown = restTimerInSeconds;
+    currentCountdownTruncated = restTimerInSeconds;
+  } else if (currentCycle === CycleType.REST_TIMER) {
+    cycleNumber += 1;
+    currentCycle = cycleNumber == 4 ? CycleType.BREAK_TIMER : CycleType.MAIN_TIMER;
+    currentCountdown = cycleNumber == 4 ? longBreakInSeconds : mainTimerInSeconds;
+    currentCountdownTruncated = currentCountdown;
+  } else if (currentCycle === CycleType.BREAK_TIMER) {
+    currentCycle = CycleType.MAIN_TIMER;
+    currentCountdown = mainTimerInSeconds;
+    currentCountdownTruncated = mainTimerInSeconds;
+    cycleNumber = 0;
+  }
+}
 
 
 /*****
  * EVENT LISTENERS
 *****/
 
-btnStart.addEventListener("click", () => requestAnimationFrame(startTimer));
-btnStop.addEventListener("click", () => cancelAnimationFrame(RAF));
+btnStart.addEventListener("click", () => {
+  if (started) {
+    toggleStartButton();
+  } else {
+    requestAnimationFrame(startTimer)
+  }
+});
+
+
+btnStop.addEventListener("click", () => {
+  cancelAnimationFrame(RAF);
+  paused = false;
+  started = false;
+  minutesNode.innerText = "25";
+  secondsNode.innerText = "00";
+  btnStart.innerText = "Start";
+});
 
 /*****
  * FUNCTION CALLS

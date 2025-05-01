@@ -1,7 +1,7 @@
 # Pomodor Timer
 
 1. Work for 25 minutes
-1. Break for 10 minutes
+1. Break for 5 minutes
 1. Repeat 3 more times
 1. Take 20 minute break
 
@@ -9,13 +9,13 @@
 
 - [X] Create a timer
 - [X] Count down said timer
-- [ ] Reset time for work/break
+- [X] Reset time for work/break
 - [ ] Keep track of pomodori done (4 at a time)
-- [ ] Do long break
+- [X] Do long break
 
 
 ## UI Goals
-- [ ] Big timer, not much else
+- [X] Big timer, not much else
 - [ ] Pause button
 - [ ] Visual countdown
 - [ ] Variable time options
