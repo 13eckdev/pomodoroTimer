@@ -1,18 +1,15 @@
+import { CycleType, Pomodoro } from "./pomodoro.js";
+
 /*****
  * SETTING DEFAULTS
 *****/
 
-const mainTimerInSeconds = 25 * 60;
-const restTimerInSeconds = 5 * 60;
-const longBreakInSeconds = 10 * 60;
+// const mainTimerInSeconds = 25 * 60;
+// const restTimerInSeconds = 5 * 60;
+// const longBreakInSeconds = 10 * 60;
 
-const CycleType = Object.freeze({
-  NONE: 0,
-  MAIN_TIMER: 1, // WORK 🖥️ : ${cycleNumber+1}
-  REST_TIMER: 2, // COFFEE ☕️ : ${cycleNumber+1}
-  BREAK_TIMER: 3 // HOME 😴 : ${cycleNumber+1}
-});
-
+const pom = new Pomodoro();
+pom.start();
 
 
 /*****
@@ -27,38 +24,26 @@ const btnStop = document.querySelector("#btn-stop");
 
 
 /*****
- * STATE
-*****/
-
-let currentCountdown = 0;
-let currentCountdownTruncated = 0;
-let currentTimeStamp = 0;
-let RAF;
-let currentCycle = CycleType.NONE;
-let cycleNumber = 0;
-let paused = false;
-let started = false;
-
-/*****
  * FUNCTION DECLARATION
 *****/
-
-
-const startTimer = (newTimestamp) => {
-  started = true;
-  currentCountdown = mainTimerInSeconds;
-  currentCountdownTruncated = mainTimerInSeconds;
-  currentTimeStamp = newTimestamp;
-  btnStart.innerText = "Pause";
-  currentCycle = CycleType.MAIN_TIMER;
-
-  RAF = requestAnimationFrame(runTimer);
-}
 
 const toggleStartButton = () => {
   btnStart.innerText = paused ? "Pause" : "Continue";
   paused = !paused;
 }
+
+
+// const startTimer = (newTimestamp) => {
+//   started = true;
+//   currentCountdown = mainTimerInSeconds;
+//   currentCountdownTruncated = mainTimerInSeconds;
+//   currentTimeStamp = newTimestamp;
+//   btnStart.innerText = "Pause";
+//   currentCycle = CycleType.MAIN_TIMER;
+
+//   RAF = requestAnimationFrame(runTimer);
+// }
+
 
 const runTimer = (newTimestamp) => {
   // newTimestamp - currentTimestamp = delta time (in MS)

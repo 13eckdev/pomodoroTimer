@@ -12,6 +12,8 @@
 - [X] Reset time for work/break
 - [ ] Keep track of pomodori done (4 at a time)
 - [X] Do long break
+- [ ] Refactor code to be better
+- [ ] Add events: timeUpdate, cycleUpdate
 
 
 ## UI Goals
