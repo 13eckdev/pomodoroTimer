@@ -17,6 +17,10 @@ body {
   gap: 1em;
 }
 
+#btn-pause {
+  display: none;
+}
+
 #timer {
   display: grid;
   place-items: center;
@@ -40,4 +44,28 @@ body {
 
 #timer .seconds::before {
   content: ":";
+}
+
+#particles {
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  animation-name: floatingEmoji;
+  animation-duration: calc(1s / var(--speed));
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--delay) * -1.5s);
+}
+
+.particle::before {
+  content: attr(data-emoji);
+  opacity: 70%;
+}
+
+@keyframes floatingEmoji {
+  to {
+    top: -20vh;
+    rotate: 1turn;
+  }
 }

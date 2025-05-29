@@ -1,9 +1,9 @@
-# Pomodor Timer
+# Pomodoro Timer
 
 1. Work for 25 minutes
-1. Break for 5 minutes
-1. Repeat 3 more times
-1. Take 20 minute break
+2. Break for 5 minutes
+3. Repeat 3 more times
+4. Take 10-minute break
 
 ## List Of Things To Do
 

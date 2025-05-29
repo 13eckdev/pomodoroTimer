@@ -1,4 +1,5 @@
 import { CycleType, Pomodoro } from "./pomodoro.js";
+import {} from "./particles.js";
 
 /*****
  * SETTING DEFAULTS
@@ -9,7 +10,7 @@ import { CycleType, Pomodoro } from "./pomodoro.js";
 // const longBreakInSeconds = 10 * 60;
 
 const pom = new Pomodoro();
-pom.start();
+
 
 
 /*****
@@ -21,6 +22,7 @@ const minutesNode = document.querySelector(".minutes");
 const secondsNode = document.querySelector(".seconds");
 const btnStart = document.querySelector("#btn-start");
 const btnStop = document.querySelector("#btn-stop");
+const btnPause = document.querySelector("#btn-pause");
 
 
 /*****
@@ -45,36 +47,36 @@ const toggleStartButton = () => {
 // }
 
 
-const runTimer = (newTimestamp) => {
-  // newTimestamp - currentTimestamp = delta time (in MS)
-  const deltaTimeMS = newTimestamp - currentTimeStamp;
-  currentTimeStamp = newTimestamp;
+// const runTimer = (newTimestamp) => {
+//   // newTimestamp - currentTimestamp = delta time (in MS)
+//   const deltaTimeMS = newTimestamp - currentTimeStamp;
+//   currentTimeStamp = newTimestamp;
 
-  RAF = requestAnimationFrame(runTimer);
+//   RAF = requestAnimationFrame(runTimer);
   
-  if (paused) { return; }
+//   if (paused) { return; }
   
-  // MS * 0.001 = seconds
-  const deltaTimeS = deltaTimeMS * 0.001;
+//   // MS * 0.001 = seconds
+//   const deltaTimeS = deltaTimeMS * 0.001;
   
-  // currentCountdown - DT(s) = time left
-  currentCountdown -= deltaTimeS;
-  const newTruncated = Math.floor(currentCountdown);
-  checkCycle(currentCountdown);
+//   // currentCountdown - DT(s) = time left
+//   currentCountdown -= deltaTimeS;
+//   const newTruncated = Math.floor(currentCountdown);
+//   checkCycle(currentCountdown);
 
-  if (newTruncated === currentCountdownTruncated) { return; }
+//   if (newTruncated === currentCountdownTruncated) { return; }
 
-  // FLOOR (timeleft / 60) = min remaining
-  const minRemaining = Math.floor(currentCountdown / 60).toString().padStart(2, "0");
+//   // FLOOR (timeleft / 60) = min remaining
+//   const minRemaining = Math.floor(currentCountdown / 60).toString().padStart(2, "0");
   
-  // timeleft % 60 = sec remaining
-  const secRemaining = Math.floor(currentCountdown % 60).toString().padStart(2, "0");
+//   // timeleft % 60 = sec remaining
+//   const secRemaining = Math.floor(currentCountdown % 60).toString().padStart(2, "0");
   
-  // update the DOM
-  minutesNode.innerText = minRemaining;
-  secondsNode.innerText = secRemaining;
-  currentCountdownTruncated = newTruncated;
-}
+//   // update the DOM
+//   minutesNode.innerText = minRemaining;
+//   secondsNode.innerText = secRemaining;
+//   currentCountdownTruncated = newTruncated;
+// }
 
 const checkCycle = (countdown) => {
   // dt <= 0 ? move on to rest/restart main
@@ -103,21 +105,27 @@ const checkCycle = (countdown) => {
 *****/
 
 btnStart.addEventListener("click", () => {
-  if (started) {
-    toggleStartButton();
-  } else {
-    requestAnimationFrame(startTimer)
-  }
+  pom.start();
+  btnPause.style.display = "block";
+  btnStart.style.display = "none";
 });
 
+btnPause.addEventListener("click", () => {
+  pom.pause();
+  btnPause.style.display = "none";
+  btnStart.style.display = "block";
+});
 
 btnStop.addEventListener("click", () => {
-  cancelAnimationFrame(RAF);
-  paused = false;
-  started = false;
+  pom.stop();
   minutesNode.innerText = "25";
   secondsNode.innerText = "00";
-  btnStart.innerText = "Start";
+});
+
+pom.onTimeChange( (event) => {
+  const [min, sec] = event.detail;
+  minutesNode.innerText = min;
+  secondsNode.innerText = sec;
 });
 
 /*****
