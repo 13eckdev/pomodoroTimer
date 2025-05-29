@@ -52,9 +52,8 @@ body {
 
 .particle {
   position: absolute;
-  animation-name: floatingEmoji;
   animation-duration: calc(1s / var(--speed));
-  animation-iteration-count: infinite;
+  /* animation-iteration-count: infinite; */
   animation-delay: calc(var(--delay) * -1.5s);
 }
 
@@ -64,6 +63,13 @@ body {
 }
 
 @keyframes floatingEmoji {
+  to {
+    top: -20vh;
+    rotate: 1turn;
+  }
+}
+
+@keyframes floatingEmoji2 {
   to {
     top: -20vh;
     rotate: 1turn;
